@@ -5,6 +5,7 @@ pub struct State {
     pub buys:    i32,
     pub gold:    i32,
     pub bought:  Vec<i32>,
+    pub hand:    Vec<Card>
 }
 
 pub enum Card {
