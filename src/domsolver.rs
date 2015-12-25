@@ -24,8 +24,11 @@ pub enum Card {
 
 impl State {
     fn draw_card(&mut self, deck: &mut Vec<Card>) {
-        let draw = deck.remove(0);
-        self.hand.push(draw);
+        if deck.len() > 0 {
+            let draw = deck.remove(0);
+            self.hand.push(draw);
+        }
+        else { println!("Deck expended"); }
     }
     
     fn play_action(mut self, c: &Card, deck: &mut Vec<Card>) -> State {
