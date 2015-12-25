@@ -113,4 +113,15 @@ let a = &x; // Immutable borrow of x's value, x cannot be used in this scope any
 let b = &mut y; // Mutable borrow of y, no further borrows of y can occur
 
 In the above example, neither a nor b could have the value they point to change, but the value itself can change in b (but not a).
--------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------
+fn print_area<T: HasArea>(param: T)
+
+is a function prototype which operates on the generic T. T, however, MUST impl the trait and the functions included in that trait. This is a way to specify what kinds of things a generic function can operate on. Traits mandate impl's of function signatures.
+--------------------------------------------------------------------------------------
+impl is used to add a function to a particular type
+--------------------------------------------------------------------------------------
+#[derive(PartialEq, PartialOrd)]
+struct structname;
+
+The derive attribute lets you specify some Rust default traits for a struct or other type. You can also implement them yourself if you need more complex behavior.
+--------------------------------------------------------------------------------------
