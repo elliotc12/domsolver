@@ -1,4 +1,4 @@
-class Names:
+class Cards:
     [COPPER, SILVER, GOLD, ESTATE, DUCHY, PROVINCE, VILLAGE, MARKET, SMITHY] = range(9)
 
 class Types:
@@ -37,16 +37,16 @@ class Province:
 class Village:
     type = Types.ACTION
     cost = 3
-    def play(state):
-        state.hand.append(state.deck.draw())
+    def play(self, state):
+        state.hand.append(state.draw())
         state.actions += 2
         return state
 
 class Market:
     type = Types.ACTION
     cost = 5
-    def play(state):
-        state.hand.append(state.deck.draw())
+    def play(self, state):
+        state.hand.append(state.draw())
         state.actions += 1
         state.buys += 1
         state.money += 1
@@ -55,19 +55,19 @@ class Market:
 class Smithy:
     type = Types.ACTION
     cost = 4
-    def play(state):
-        state.hand.append(state.deck.draw())
-        state.hand.append(state.deck.draw())
-        state.hand.append(state.deck.draw())
+    def play(self, state):
+        state.hand.append(state.draw())
+        state.hand.append(state.draw())
+        state.hand.append(state.draw())
         return state
 
-cards = []
-cards.insert(Names.COPPER,     Copper())
-cards.insert(Names.SILVER,     Silver())
-cards.insert(Names.GOLD,       Gold())
-cards.insert(Names.ESTATE,     Estate())
-cards.insert(Names.DUCHY,      Duchy())
-cards.insert(Names.PROVINCE,   Province())
-cards.insert(Names.VILLAGE,    Village())
-cards.insert(Names.MARKET,     Market())
-cards.insert(Names.SMITHY,     Smithy())
+carddata = []
+carddata.insert(Cards.COPPER,     Copper())
+carddata.insert(Cards.SILVER,     Silver())
+carddata.insert(Cards.GOLD,       Gold())
+carddata.insert(Cards.ESTATE,     Estate())
+carddata.insert(Cards.DUCHY,      Duchy())
+carddata.insert(Cards.PROVINCE,   Province())
+carddata.insert(Cards.VILLAGE,    Village())
+carddata.insert(Cards.MARKET,     Market())
+carddata.insert(Cards.SMITHY,     Smithy())

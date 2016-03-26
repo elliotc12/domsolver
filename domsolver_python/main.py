@@ -5,10 +5,14 @@ import State
 import Play
 
 init_state = State.State(1, 1, 0,
-                         [Cards.Names.COPPER,
-                          Cards.Names.COPPER,
-                          Cards.Names.COPPER],
+                         [Cards.Cards.COPPER,
+                          Cards.Cards.COPPER,
+                          Cards.Cards.COPPER,
+                          Cards.Cards.VILLAGE,
+                          Cards.Cards.MARKET],
                          [],
-                         [Cards.Names.COPPER,
-                          Cards.Names.SILVER,
-                          Cards.Names.GOLD])
+                         [Cards.Cards.COPPER,
+                          Cards.Cards.SILVER,
+                          Cards.Cards.GOLD])
+
+Play.play_turn(init_state, 0)
