@@ -1,5 +1,13 @@
 class Cards:
-    [COPPER, SILVER, GOLD, ESTATE, DUCHY, PROVINCE, VILLAGE, MARKET, SMITHY] = range(9)
+    COPPER = "Copper"
+    SILVER = "Silver"
+    GOLD = "Gold"
+    ESTATE = "Estate"
+    DUCHY = "Duchy"
+    PROVINCE = "Province"
+    VILLAGE = "Village"
+    MARKET = "Market"
+    SMITHY = "Smithy"
 
 class Types:
     ACTION, CURRENCY, VICTORY = range(3)
@@ -61,13 +69,13 @@ class Smithy:
         state.draw()
         return state
 
-carddata = []
-carddata.insert(Cards.COPPER,     Copper())
-carddata.insert(Cards.SILVER,     Silver())
-carddata.insert(Cards.GOLD,       Gold())
-carddata.insert(Cards.ESTATE,     Estate())
-carddata.insert(Cards.DUCHY,      Duchy())
-carddata.insert(Cards.PROVINCE,   Province())
-carddata.insert(Cards.VILLAGE,    Village())
-carddata.insert(Cards.MARKET,     Market())
-carddata.insert(Cards.SMITHY,     Smithy())
+carddata = {}
+carddata["Copper"]   =  Copper()
+carddata["Silver"]   =  Silver()
+carddata["Gold"]     =  Gold()
+carddata["Estate"]   =  Estate()
+carddata["Duchy"]    =  Duchy()
+carddata["Province"] =  Province()
+carddata["Village"]  =  Village()
+carddata["Market"]   =  Market()
+carddata["Smithy"]   =  Smithy()
