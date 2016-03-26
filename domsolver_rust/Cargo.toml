@@ -1,0 +1,7 @@
+[package]
+name = "domsolver"
+version = "0.1.0"
+authors = ["elliotc12 <elliotc12@gmail.com>"]
+
+[lib]
+name = "domsolver"

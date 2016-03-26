@@ -1,0 +1,127 @@
+Rust is all about zero-cost abstractions, namely compile-time structures that only exist to assure proper code, and are done away with before runtime. Checking binding ownership is one of those abstractions.
+--------------------------------------------------------------------------------------
+Iterators are objects (like (0..10)) which can be used in for loops. They can also be collected. (0..10).collect::<Vec<i32>>(); collects the iterator into a vector.
+
+find(|c| closure on c) is another consumer which operatoes on iterators.
+
+.iter() is a function which can be called on vectors, like so:
+
+let nums = vec![0, 1, 2];
+for x in nums.iter() {
+    dosomething with x
+}
+
+This can be contrasted with:
+
+let nums = vec![0, 1, 2];
+for x in nums {
+    dosomething with x
+}
+
+In both of these, x has the same type.
+
+.filter(|c| closure on c) works on an iterator and creates another iterator for whenever the closure returns true.
+--------------------------------------------------------------------------------------
+let (x, y) = (1, 2);   // super valid!
+--------------------------------------------------------------------------------------
+In rust, expressions (lines which return a value) are different from statements, which don't return a value. In rust, "declarations" (ie let y = 5;) are statements, NOT expressions. Adding a semicolon to an expression turns it into an "expression statement." Apparently using the return statement is poor style and shouldn't be done, unless you are using it specially to return early.
+--------------------------------------------------------------------------------------
+In rust, the char (a primitive type you don't need to import) is not ASCII but Unicode. It is hte size of an int (?), not an 8-bit thing. Which is kinda weird. I think this is true. Chars are different from Strings in that they are made with a single-tick quotation, not a double-tick.
+usize and isize have the size of your OSs pointer rep: 32 or 64.
+--------------------------------------------------------------------------------------
+let a = [0, 1, 2, 3, 4];
+This declares a as an "array," different from a vector in that it is fixed-length.
+
+let slice = a[0..3];
+This declares slice as a "slice" type, which is a "view into the data structure array." Slices can be done on vectors, arrays, and probably other stuff as well. A slice is always a reference type, meaning that it is a pointer. Rust always dereferences pointers good pretty automatically.
+
+let slice = &a[..]; - This makes a slice version of a. Not sure what just a[..] is...just the elements of the slice, not a pointer to the slice?
+
+Whenever you slice something, you are copying it.
+--------------------------------------------------------------------------------------
+A generic type, like Option<T> or Vec<T>, means that the particular structure you are talking about is superimposed over a primitive type, like i32 or usize. Some(T) and None() are both examples of Option<T>s.
+--------------------------------------------------------------------------------------
+A str or &str is the most primitive type of string. It is unsized. It is contained inside String, which is a more powerful string thing.
+--------------------------------------------------------------------------------------
+Tuples are typed groups of elements. They are static-sized. Tuples are indexed by a "tuple.index" notation.
+--------------------------------------------------------------------------------------
+Function pointers are also a type. They have type fn(arg types) -> output types.
+--------------------------------------------------------------------------------------
+if: normal syntax. Except this cool thing:
+let y = (if x == 5 {10} else {5});
+An if statement is an expression which returns things, unless you put ';'s in its inner statements.
+--------------------------------------------------------------------------------------
+Rust for loops are like dis:
+for var in iter/collection {
+    do this thing
+}
+
+.enumerate() acts on an iterator and returns another iterator which contains the values in the original iterator, as well as an integer indexing how many times you've called next (starting at 0). The values of .enumerate() are tuples (index, value).
+--------------------------------------------------------------------------------------
+while loops work just the way you think they would. The expression in the while loop must be a bool.
+
+You can also use a loop { code } to infinitely loop through a section of code. Don't use while true!
+
+Instead of using a binding to figure when you should start or end, you can use break; and continue; to either end execusion early or cancel this particular loop.
+--------------------------------------------------------------------------------------
+Rust ha no garbage collector, but it does automatically free things. Every time you put something on the heap (making a new() struct, using vec!, probably many other things), when the binding that owns that heap reference goes out of scope (has its lifetime end), the heap space is automatically freed.
+
+Note: This is only true when you actually own the binding. If you have "borrowed" a reference to the data and the borrowing code goes out of scope, the data is not deallocated.
+
+There can only be one "binding" to a variable (memory segment) at any one time. If you bind a variable and then bind to that variable's binding, the initial binding is unbound and unusable. This is known as a "move." Moves are done so that you can never have two different pointers in memory to the same data. Two pointers means that you could have race conditions (one pointer/path-of-execution reads while another path writes - Rust guarentees that each path of execution has its own bindings, paths cannot share bindings).
+
+let v = "hij";
+let new_v = v;	// v is moved to new_v and unbound
+
+Putting v as an argument in a function call also "moves" v's data and unbinds v.
+
+If you return a variable's binding when you call it in a function, even if it is not changed, the calling function "reclaims" ownership of that variable.
+--------------------------------------------------------------------------------------
+You can add "_" before a variable name and Rust won't yell at you for it being unused? Meb?
+--------------------------------------------------------------------------------------
+Not all things use Move to reassign, however. Copy is another method for reassigning variables, implemented on all primitive types. When something is stored on the stack and reassigned to a new binding, the new binding gets a copy of the data, and doesn't refer to the initial variable at all.
+let a = 1;
+let b = a;
+Here, a and b are two separate variables which both have the value of 1.
+Vectors and other data structures put on the heap do NOT implement the Copy method.
+--------------------------------------------------------------------------------------
+Borrowing: Passing by reference instead of value. There can be a pointer to a vector on the heap. You pass a reference to it and the pointer is copied + given to the function being called. Once the function ends, this copy is destroyed and "unborrowed." Presumably you can not use a value that has been borrowed - it must be unborrowed before you can use it again. Otherwise you would have two existing pointers to the data and race conditions could occur.
+
+Moving is different than borrowing in that when you move something, you can no longer use the old unbound value, whereas when you borrow, you can use the old value once it is unborrowed.
+
+In Rust, most standard function calls (push, free, print, etc...) can take either bindings or reference bindings. Sometimes you do need to use the * dereference operator, however. EG when you do a += or something.
+
+Importantly, by default borrowed references are immutable. They are read-only. To borrow mutably (totally legal and fine, not frowned-upon), use the &mut operator instead of the & operator.
+
+Importantly, borrows must end before things like println! can use the borrowed data. So basically never borrow anything in the same scope as the original binding is used.
+
+You CAN do multiple immutable references - make three immutable references to an array and pass them to threads. However, you CAN'T make multiple mutable references to something - so as to prevent race conditions. This is why the above is true, but for mutable borrows only. You can have multiple immutable borrows in the same scope as the owner, you just can't use the owner until the scope ends.
+
+Do not try to modify the iterator you're iterating over.
+
+Borrowed bindings (from declare to out-of-scope) must live shorter than what they are borrowing. You cannot declare a borrow, declare data, then borrow the data into the borrow. That's kinda weird but alright.
+--------------------------------------------------------------------------------------
+Lifetimes:
+Rust lets you specifically note the lifetime of functions using the <'a> syntax.
+
+'static is a special named lifetime that indicates that the thing being talked about lives for the entire program. All string literals are of type &'static str.
+--------------------------------------------------------------------------------------
+let x = 5; // Immutable binding - can't change value of x
+let mut y = 5; // Mutable binding, can change value of y
+let z = x; // Immutable copy of x, not bound to x at all, z's value also cant change
+let a = &x; // Immutable borrow of x's value, x cannot be used in this scope anymore
+let b = &mut y; // Mutable borrow of y, no further borrows of y can occur
+
+In the above example, neither a nor b could have the value they point to change, but the value itself can change in b (but not a).
+--------------------------------------------------------------------------------------
+fn print_area<T: HasArea>(param: T)
+
+is a function prototype which operates on the generic T. T, however, MUST impl the trait and the functions included in that trait. This is a way to specify what kinds of things a generic function can operate on. Traits mandate impl's of function signatures.
+--------------------------------------------------------------------------------------
+impl is used to add a function to a particular type
+--------------------------------------------------------------------------------------
+#[derive(PartialEq, PartialOrd)]
+struct structname;
+
+The derive attribute lets you specify some Rust default traits for a struct or other type. You can also implement them yourself if you need more complex behavior.
+--------------------------------------------------------------------------------------
