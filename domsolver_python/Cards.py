@@ -38,7 +38,7 @@ class Village:
     type = Types.ACTION
     cost = 3
     def play(self, state):
-        state.hand.append(state.draw())
+        state.draw()
         state.actions += 2
         return state
 
@@ -46,7 +46,7 @@ class Market:
     type = Types.ACTION
     cost = 5
     def play(self, state):
-        state.hand.append(state.draw())
+        state.draw()
         state.actions += 1
         state.buys += 1
         state.money += 1
@@ -56,9 +56,9 @@ class Smithy:
     type = Types.ACTION
     cost = 4
     def play(self, state):
-        state.hand.append(state.draw())
-        state.hand.append(state.draw())
-        state.hand.append(state.draw())
+        state.draw()
+        state.draw()
+        state.draw()
         return state
 
 carddata = []
